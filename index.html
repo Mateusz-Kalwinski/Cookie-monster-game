@@ -1,0 +1,277 @@
+<html>
+        <head>
+                <title>Cookie Monster</title>
+				<link rel="shortcut icon" href="postac.png">
+        </head>
+        	<style>
+        		body{
+        			background-color: #1b2f4b;
+        		}
+
+        		#score {
+        			text-align: center;
+        			color: white;
+        			font-family: Vegur;
+        		}
+        		table{
+        			margin: auto;
+        			border-style: solid;
+        			border-width: 2px;
+        			border-color: white;
+        			border-radius: 10px;
+        		}
+        	</style>
+        <body>
+        <br><br><br>
+        <h1 id="score"></h1>
+    <div id="cel"></div>
+        <script>
+
+          var rozmiar = 12;
+								
+								
+								
+          var punkty = 0;
+          var ile_wrogow = 4;
+          var wrog=new Array (ile_wrogow);
+          
+          var i,j;
+          var  szerokosc=rozmiar;
+          var  wysokosc=rozmiar;
+          var x, y;
+          x = Math.round(szerokosc/2);
+          y = Math.round(wysokosc/2);
+          var  t = new Array(szerokosc);
+                
+          function inicjuj(){
+              for (i=0; i<szerokosc; i++){
+                t[i] = new Array(wysokosc);
+                for (j=0; j<wysokosc; j++){
+                         t[i][j] = 0;
+                }
+              }
+              t[x][y] = 1;
+            
+              cegla();
+              ciastko();
+          }
+                
+          function wypisz(){
+              var HTML = '<table cellpadding="0" cellspacing="0">';
+              for (i=0; i<wysokosc; i++){
+                  HTML += "<tr>";
+                  for (j=0; j<szerokosc; j++){
+                      HTML += "<td width=30 height=30>";
+                      if (t[i][j] == 0) {
+                              HTML += '<img src="tlo.png" height="70" width="70">';
+                      } else if (t[i][j] == 1) {
+                              HTML += '<img src="postac.png" height="70" width="70">';
+                      } else if (t[i][j] == 2) {
+                              HTML += '<img src="cegla.png" height="70" width="70">';
+                      }
+                      else if (t[i][j] == 4) {
+                              HTML += '<img src="wrog.png" height="70" width="70">';
+                      }
+                                                               else if (t[i][j] == 3) {
+                              HTML += '<img src="ciastko.png" height="70" width="70">';
+                      }
+                      HTML += "</td>"
+                  }
+                  HTML += "</tr>";
+              }                                          
+              HTML += "</table>";
+              document.getElementById("cel").innerHTML = HTML;
+              document.getElementById("score").innerHTML = "Punkty: " +punkty;
+            
+              if(punkty == 4){
+                alert('Gratulacje wygrałeś!');
+              }
+          }
+                                
+
+          function cegla(){
+                  t[1][1] = 2;
+                  t[1][4] = 2;
+                  t[1][3] = 2;
+                  t[1][6] = 2;
+                  t[1][9] = 2;
+                  t[2][1] = 2;
+                  t[2][4] = 2;
+                  t[2][6] = 2;
+                  t[2][8] = 2;
+                  t[3][1] = 2;
+                  t[3][2] = 2;
+                  t[3][11] = 2;
+                  t[3][6] = 2;
+                  t[8][7] = 2;
+                  t[4][1] = 2;
+                  t[4][3] = 2;
+                  t[4][6] = 2;
+                  t[4][8] = 2;
+                  t[5][1] = 2;
+                  t[5][4] = 2;
+                  t[5][10] = 2;
+                  t[8][2] = 2;
+          }
+
+          function ciastko(){
+                  t[0][4] = 3;
+                  t[3][9] = 3;
+                  t[9][2] = 3;
+                  t[11][11] = 3;
+          }
+                
+          inicjuj();
+          wrogowie();
+          setInterval (atak, 200);
+          wypisz();
+				
+          function wrogowie(){
+              i = 0;
+              while (i < 4){
+                  var rx = Math.round(Math.random()*9);
+                  var ry = Math.round(Math.random()*9);
+                  if (t[rx][ry] == 0) {
+                          wrog[i] = new Array(2);
+                          wrog[i][0] = rx;
+                          wrog[i][1] = ry;
+                          t[wrog[i][0]][wrog[i][1]] = 4;
+                          i++;
+                  }
+              }
+          }
+                                
+          function atak(){        
+              for (i=0; i<4; i++){
+                  var x_wr = wrog[i][0];
+                  var y_wr = wrog[i][1];
+                  var kierunek = Math.floor(Math.random()*2);
+                  if (kierunek == 0){
+                      var przyrost = x - x_wr;
+                      if (przyrost > 0 && t[x_wr+1][y_wr] == 0){
+                              t[x_wr][y_wr] = 0;
+                              t[x_wr+1][y_wr] = 4;
+                              wrog[i][0]++;
+                      }
+                      if (przyrost < 0 && t[x_wr-1][y_wr] == 0){
+                              t[x_wr][y_wr] = 0;
+                              t[x_wr-1][y_wr] = 4;
+                              wrog[i][0]--;
+
+                      }
+                  }
+                  if (kierunek == 1){
+                      var przyrost = y - y_wr;
+                      if (przyrost > 0 && t[x_wr][y_wr+1] == 0){
+                              t[x_wr][y_wr] = 0;
+                              t[x_wr][y_wr+1] = 4;
+                              wrog[i][1]++;
+
+                      }
+                      if (przyrost < 0 && t[x_wr][y_wr-1] == 0){
+                              t[x_wr][y_wr] = 0;
+                              t[x_wr][y_wr-1] = 4;
+                              wrog[i][1]--;
+
+                      }
+                  }
+              }
+              wypisz();
+          }
+
+          function gora(){
+              if (x>0 && t[x-1][y]!=2){
+                  if (t[x-1][y]==3) {
+                          punkty++;
+                  }else if(t[x-1][y]==4){
+                    alert('przegrałes');
+                    inicjuj();
+                    wrogowie();
+                    wypisz();
+                    punkty =0;     
+                  }
+                  t[x][y] = 0;
+                  x--;
+                  t[x][y] = 1;
+
+                  wypisz();
+              }
+          }
+  
+          function dol(){
+              r = (rozmiar-1);
+              if (x<r && t[x+1][y]!=2){
+                  if (t[x+1][y]==3) {
+                          punkty++;
+                  }else if(t[x+1][y]==4){
+                    alert('przegrałes');
+                    inicjuj();
+                    wrogowie();
+                    wypisz();
+                    punkty =0;
+                  }
+                  t[x][y] = 0;
+                  x++;
+                  t[x][y] = 1;
+                  wypisz();
+              }
+          }
+          
+          function prawo(){
+              r = (rozmiar-1);
+              if (y<r && t[x][y+1]!=2){
+                  if (t[x][y+1]==3) {
+                          punkty++;
+                  }else if(t[x][y+1]==4){
+                    alert('przegrałes');
+                    inicjuj();
+                    wrogowie();
+                    wypisz();
+                    punkty =0;
+                  }
+                  t[x][y] = 0;
+                  y++;
+                  t[x][y] = 1;
+                  wypisz();
+              }
+          }
+  
+          function lewo(){
+              if (y>0 && t[x][y-1]!=2){
+                  if (t[x][y-1]==3) {
+                          punkty++;
+                  }else if(t[x][y-1]==4){
+                    alert('przegrałes');
+                    inicjuj();
+                    wrogowie();
+                    wypisz();
+                    punkty =0;
+                  }
+                  t[x][y] = 0;
+                  y--;
+                  t[x][y] = 1;
+                  wypisz();
+              }
+          }
+          
+                
+
+          document.body.addEventListener('keydown', function(e) { 
+              if (e.keyCode == 37){
+                      lewo();
+                przegrana();
+              } else if (e.keyCode == 38){
+                      gora();
+                przegrana();
+              } else if (e.keyCode == 39){
+                      prawo();
+                przegrana();
+              } else if (e.keyCode == 40){
+                      dol();
+                przegrana();
+              } 
+          });
+          
+        </script>               
+    </body>
+</html>
